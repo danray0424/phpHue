@@ -12,3 +12,5 @@ colorset.php is a command line light changer. On the command line:
 ./colorset.php -l [lightnumber] -h [hue in degrees on the color circle 0-360] -s [saturation 0-254] -b [brightness 0-254] -t [white color temp 150-500]
 
 All of these parameters are optional. If you don't specify a light, it'll set the values you specify on all of them (well... lamps numbered 1 through 3, currently).
+
+This is a totally quick-and-dirty batch of scripts I've tossed together here. If anyone wants to properly OO-ify these, that'd be awesome and I look forward to your pull request.
