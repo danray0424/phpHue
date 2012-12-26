@@ -9,6 +9,6 @@ Then check blink.php and rand.php for examples of interacting with hue.php. It u
 
 colorset.php is a command line light changer. On the command line:
 
-./colorset.php -l <lightnumber> -h <hue in degrees on the color circle 0-360> -s <saturation 0-254> -b <brightness 0-254> -t <white color temp 150-500> 
+./colorset.php -l [lightnumber] -h [hue in degrees on the color circle 0-360] -s [saturation 0-254] -b [brightness 0-254] -t [white color temp 150-500]
 
 All of these parameters are optional. If you don't specify a light, it'll set the values you specify on all of them (well... lamps numbered 1 through 3, currently).

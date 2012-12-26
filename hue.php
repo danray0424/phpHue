@@ -5,9 +5,8 @@ $key = '16e909913bb833b728dbdbc554f95eb';
 
 require('pest-master/PestJSON.php');
 
-//$state = getLightState(2);
-//print_r($state);
 
+// Registers your script with your Hue hub
 function register() {
 	global $bridge, $key;
 
@@ -17,7 +16,7 @@ function register() {
 	return "$result\n";
 }
 
-
+// Returns a big array of the state of either a single light, or all your lights
 function getLightState($lightid = false) { 
 	global $bridge, $key;
 	$targets = array();
@@ -52,6 +51,7 @@ function getLightState($lightid = false) {
 	return $state;
 }
 
+// sets the alert state of a single light. 'select' blinks once, 'lselect' blinks repeatedly, 'none' turns off blinking
 function alertLight($target, $type = 'select') {
 		global $bridge, $key;
 		$pest = new Pest("http://$bridge/api/$key/");
@@ -62,6 +62,7 @@ function alertLight($target, $type = 'select') {
 		return $result;
 }
 
+// function for setting the state property of one or more lights
 function setLight($lightid, $input) {
 	global $bridge, $key;
 	$pest = new Pest("http://$bridge/api/$key/");
@@ -79,6 +80,7 @@ function setLight($lightid, $input) {
 	return $result;
 }
 
+// gin up a random color
 function getRandomColor() {
 	$return = array();
 
