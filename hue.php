@@ -16,26 +16,23 @@ function register() {
 	return "$result\n";
 }
 
+
+
 // Returns a big array of the state of either a single light, or all your lights
 function getLightState($lightid = false) { 
 	global $bridge, $key;
 	$targets = array();
 	$result = array();
 
-	if (! is_array($lightid)) {
-		$targets[] = $lightid;
+	if ($lightid === false) {	
+		$targets = getLightIdsList();
 	} else {
-		$targets = $lightid;
+		if (! is_array($lightid)) {
+			$targets[] = $lightid;
+		} else {
+			$targets = $lightid;
+		}
 	}
-
-	if (!$lightid) {	
-		$pest = new Pest("http://$bridge/api/$key/");
-
-		$result = json_decode($pest->get('lights'), true);
-		$targets = array_keys($result);
-
-	}
-
 
 	foreach ($targets as $id) {
 
@@ -51,8 +48,13 @@ function getLightState($lightid = false) {
 
 // Returns an array of the light numbers in the system
 function getLightIdsList() {
-	$state = getLightState(false);
-	return array_keys($state);
+	
+		global $bridge, $key;
+		$pest = new Pest("http://$bridge/api/$key/");
+
+		$result = json_decode($pest->get('lights'), true);
+		$targets = array_keys($result);
+		return $targets;
 }
 
 // sets the alert state of a single light. 'select' blinks once, 'lselect' blinks repeatedly, 'none' turns off blinking
@@ -75,7 +77,7 @@ function setLight($lightid, $input) {
 	if (is_array($lightid)) {
 		foreach ($lightid as $id) {
 			$pest = new Pest("http://$bridge/api/$key/");
-			$result = $pest->put("lights/$id/state", $data);
+			$result .= $pest->put("lights/$id/state", $data);
 		}
 	} else {
 		$result = $pest->put("lights/$lightid/state", $data);
