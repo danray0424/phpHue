@@ -16,11 +16,10 @@ if (isset($args['l'])) {
 // clean up other inputs
 // the hue interface will keep numeric parms within range for us, just sanitize the
 // types for clean json encoding, and do the math on the hue input.
-$fields = array('l' => 'lights', 'h' => 'hue', 's' => 'sat', 'b' => 'bri', 't' => 'ct', 'o' => 'on');
+$fields = array('h' => 'hue', 's' => 'sat', 'b' => 'bri', 't' => 'ct', 'o' => 'on');
 $command = array();
 foreach ($fields as $name => $value) {
 	if (isset($args[$name])) {
-        
         if ($name == 'o') {
             $command[$value] = (bool)$args[$name];
         }
