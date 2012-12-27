@@ -43,12 +43,16 @@ function getLightState($lightid = false) {
 		$deets = json_decode($pest->get("lights/$id"), true);
 		$state = $deets['state'];
 		
-//		echo "ID:$id  On: $state[on]  brightness: $state[bri]   hue: $state[hue]   saturation: $state[sat]   colortemp: $state[ct]  name: $deets[name]" ;
 		$result[$id] = $state;
 
-//		echo "\n";
 	}
 	return $state;
+}
+
+// Returns an array of the light numbers in the system
+function getLightIdsList() {
+	$state = getLightState(false);
+	return array_keys($state);
 }
 
 // sets the alert state of a single light. 'select' blinks once, 'lselect' blinks repeatedly, 'none' turns off blinking
@@ -74,7 +78,6 @@ function setLight($lightid, $input) {
 			$result = $pest->put("lights/$id/state", $data);
 		}
 	} else {
-
 		$result = $pest->put("lights/$lightid/state", $data);
 	}
 	return $result;
