@@ -96,4 +96,13 @@ function getRandomColor() {
 	return $return;
 }
 
+// gin up a random temp-based white setting
+function getRandomWhite() {
+	$return = array();
+	$return['ct'] = rand(150,500);
+	$return['bri'] = rand(0,255);
+
+	return $return;
+}
+
 ?>

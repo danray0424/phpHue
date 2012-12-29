@@ -19,7 +19,7 @@ colorset.php is a command line light changer. On the command line:
 		-l [lightnumber] 
 		-h [hue in degrees on the color circle 0-360] 
 		-s [saturation 0-254] 
-		-b [brightness 0-254] 
+	    -b [brightness 0-254] 
 		-t [white color temp 150-500] 
 		-o [on or off, 0-1 or something else that will cast to a boolean]
 		-r [transition time, in seconds. Decimals legal (".1", for instance)]
