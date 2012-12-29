@@ -3,7 +3,7 @@
 
 require("hue.php");
 
-$args = getopt('l:h:s:b:t:o:');
+$args = getopt('l:h:s:b:t:o:r:');
 
 
 // if we didn't get a -l parameter, build an array of all lights 
@@ -16,7 +16,7 @@ if (isset($args['l'])) {
 // clean up other inputs
 // the hue interface will keep numeric parms within range for us, just sanitize the
 // types for clean json encoding, and do the math on the hue input.
-$fields = array('h' => 'hue', 's' => 'sat', 'b' => 'bri', 't' => 'ct', 'o' => 'on');
+$fields = array('h' => 'hue', 's' => 'sat', 'b' => 'bri', 't' => 'ct', 'o' => 'on', 'r' => 'transitiontime');
 $command = array();
 foreach ($fields as $name => $value) {
 	if (isset($args[$name])) {
@@ -27,6 +27,9 @@ foreach ($fields as $name => $value) {
 			$command['hue'] = 182 * $args['h'];
             $command['on'] = true;
 		}
+        elseif ($name == 'r') {
+            $command['transitiontime'] = 10 * $args['r'];
+        }
         else {
             $command[$value] = (int)$args[$name];
             $command['on'] = true;
