@@ -8,7 +8,7 @@ Getting Started
 
 hue.php contains functions for interacting with the system. Replace $bridge with your own hub's IP address. Then press your hub's center button and run register.php. That'll register your application and print out for you a key ID (big long hex string). Put that in the $key variable in hue.php.
 
-Then check blink.php and rand.php for examples of interacting with hue.php. It uses the PEST php REST client for ease of communication, but as a client of the hue.php script, you don't need to worry about that.
+Then check the "samples" directory. You'll find candle.php, blink.php, and rand.php for examples of interacting with hue.php. It uses the PEST php REST client for ease of communication, but as a client of the hue.php script, you don't need to worry about that.
 
 colorset.php
 ------------
