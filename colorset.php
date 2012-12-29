@@ -45,7 +45,6 @@ foreach ($fields as $name => $value) {
 	}
 }
 
-print_r($command);
 
 $result = setLight($light, $command);
 
