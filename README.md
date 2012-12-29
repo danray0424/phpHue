@@ -29,9 +29,13 @@ All parameters are optional. If you don't specify a light, it'll set the values 
 
 You can turn lights on or off with the -o switch. Any other parameter implies '-o true'. In other words, if you specify another parameter while the lamp is off, we'll turn it on for you. Not sure what happens if you say '-h 90 -o false', you're on your own there.
 
-The '-n' switch takes a one-word name for a color, and sets the selected lights to that color. It has a small list of predefined color names, and simply doesn't do anything if you give it a string it doesn't know. It currently knows red, blue, purple, green, coolwhite, and warmwhite. A '-n' parameter overrides any other parameter you supply.
+### Presets ###
 
-TODO: refactor the parameter cleanup business into hue.php.
+The '-n' switch takes a one-word name for a color, and sets the selected lights to that color. It has a small list of predefined color names, and simply doesn't do anything if you give it a string it doesn't know. It currently knows red, blue, purple, green, coolwhite, and warmwhite. A '-n' parameter may be overridden in part by other parameters. For instance, "-n red -s 50" will give you a pastel red, and "-n blue -r 10" will produce a 10-second fade to blue. Note that "-n red -h 200" will override the redness of the red command with a hue of 200, which is purpleish, but it will inherit the full saturation and brightness of the "red" preset.
+
+### TODO ###
+
+* refactor the parameter cleanup business into hue.php.
 
 
 Other Notes
