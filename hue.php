@@ -73,6 +73,7 @@ function setLight($lightid, $input) {
 	global $bridge, $key;
 	$pest = new Pest("http://$bridge/api/$key/");
 	$data = json_encode($input);
+	$result = '';
 
 	if (is_array($lightid)) {
 		foreach ($lightid as $id) {
@@ -103,6 +104,43 @@ function getRandomWhite() {
 	$return['bri'] = rand(0,255);
 
 	return $return;
+}
+
+// build a few color commands based on color names.
+function predefinedColors($colorname) {
+	$command = array();
+	switch ($colorname) {
+		case "green":
+			$command['hue'] =  182 * 140;
+			$command['sat'] = 254;
+			$command['bri'] = 254;
+			break;
+		case "red":
+			$command['hue'] =  0;
+			$command['sat'] = 254;
+			$command['bri'] = 254;
+			break;
+		case "blue":
+			$command['hue'] =  182 * 250;
+			$command['sat'] = 254;
+			$command['bri'] = 254;
+			break;
+		case "coolwhite":
+			$command['ct'] =  150;
+			$command['bri'] = 254;
+			break;
+		case "warmwhite":
+			$command['ct'] =  500;
+			$command['bri'] = 254;
+			break;
+		case "purple":
+			$command['hue'] =  182 * 270;
+			$command['sat'] = 254;
+			$command['bri'] = 254;
+			break;
+
+	}
+	return $command;
 }
 
 ?>
