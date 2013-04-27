@@ -43,7 +43,7 @@ function getLightState($lightid = false) {
 		$result[$id] = $state;
 
 	}
-	return $state;
+	return $result;
 }
 
 // Returns an array of the light numbers in the system
