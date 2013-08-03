@@ -10,12 +10,12 @@ hue.php contains the entire phpHue class and all its functions for interacting w
 
 Check out the "samples" directory. You'll find a few demos, showing you how to interact with phpHue. It uses the PEST php REST client for ease of communication, but as a user of phpHue, you don't need to worry about the details.
 
-colorset.php
+huecli.php
 ------------
 
-colorset.php is a command line light changer. On the command line:
+huecli.php is a command line light changer. On the command line:
 
-    ./colorset.php
+    ./huecli.php
         -i [Hue bridge's ip]
         -g [register a new key with the Hue bridge]
         -k [valid key that is registered with your Hue hub]
@@ -31,7 +31,7 @@ colorset.php is a command line light changer. On the command line:
 
 You need to specify an ip (-i), a key (-k) and at least one of the following options: -h, -s, -b, -t, -o or -n. If you don't specify a light, it'll set the values you specify on all of them.
 
-If you don't have a key yet, you can register one by calling colorset.php with -g.
+If you don't have a key yet, you can register one by calling huecli.php with -g.
 
 You can turn lights on or off with the -o switch. Any other parameter implies '-o 1'. In other words, if you specify any other parameter when the lamp is off, we'll turn it on for you.
 

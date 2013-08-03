@@ -5,7 +5,7 @@ require( 'hue.php' );
 
 function echoHelp()
 {
-    echo "./colorset.php".
+    echo "./huecli.php".
         "\n\t-i [Hue bridge's ip]".
         "\n\t-g [register a new key with the Hue bridge]".
         "\n\t-k [valid key that is registered with the Hue hub]".
@@ -37,7 +37,7 @@ if ( isset( $args['i'] ) && isset( $args['g'] ) )
     {
         echo "Registered new key with Hue bridge: " .$data[0]["success"]["username"]. "\n";
         echo "You can now try to turn on a bulb like this:".
-             "\n\n\t./colorset.php -i " .$args['i']. " -k " .$data[0]["success"]["username"]. " -o 1\n";
+             "\n\n\t./huecli.php -i " .$args['i']. " -k " .$data[0]["success"]["username"]. " -o 1\n";
     }
     exit( 0 );
 }
