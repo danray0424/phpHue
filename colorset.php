@@ -9,6 +9,7 @@ function echoHelp()
         "\n\t-i [Hue bridge's ip]".
         "\n\t-g [register a new key with the Hue bridge]".
         "\n\t-k [valid key that is registered with the Hue hub]".
+        "\n\t-f [fetch full state from Hue hub]".
         "\n\t-l [bulb number]".
         "\n\t-h [hue in degrees on the color circle 0-360]".
         "\n\t-s [saturation 0-254]".
@@ -19,8 +20,8 @@ function echoHelp()
         "\n\t-n [color name (see below)]\n";
 }
 
-$args = getopt( 'i:k:l:h:s:b:t:o:r:n:g' );
-$oneParamSet = isset( $args['h'] ) || isset( $args['s'] ) || isset( $args['b'] ) || isset( $args['t'] ) || isset( $args['o'] ) || isset( $args['n'] );
+$args = getopt( 'i:k:l:h:s:b:t:o:r:n:fg' );
+$oneParamSet = isset( $args['h'] ) || isset( $args['s'] ) || isset( $args['b'] ) || isset( $args['t'] ) || isset( $args['o'] ) || isset( $args['n'] ) || isset( $args['f'] );
 $command = array();
 
 if ( isset( $args['i'] ) && isset( $args['g'] ) )
@@ -44,7 +45,7 @@ if ( isset( $args['i'] ) && isset( $args['g'] ) )
 // we require a bridge ip and key to be specified
 if ( !isset( $args['i'] ) || !isset( $args['k'] ) || !$oneParamSet )
 {
-    $oneParamHelp = $oneParamSet ? "" : " and at least one of the following options: -h, -s, -b, -t, -o or -n.";
+    $oneParamHelp = $oneParamSet ? "" : " and at least one of the following options: -f, -h, -s, -b, -t, -o or -n.";
     echo "Error: You need to specify an ip (-i) & key (-k)$oneParamHelp\n\n";
 
     echoHelp();
@@ -63,7 +64,14 @@ else
     $light = $hue->getLightIds();
 }
 
-//handle predefined colors
+// do we want to set ot get the bridge's state
+if ( isset( $args['f'] ) )
+{
+    var_dump( $hue->state() );
+    exit( 0 );
+}
+
+// handle predefined colors
 if ( isset( $args['n'] ) )
 {
     $command = $hue->predefinedColors( $args['n'] );
@@ -88,7 +96,7 @@ foreach ( $fields as $name => $value )
             $command['hue'] = 182 * $args['h'];
             $command['on'] = true;
         }
-        else if ($name == 'r')
+        else if ( $name == 'r' )
         {
             $command['transitiontime'] = 10 * $args['r'];
         }
