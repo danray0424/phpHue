@@ -1,53 +1,62 @@
 #!/usr/bin/php
 <?php
 
-require("hue.php");
+require( 'hue.php' );
 
-$args = getopt('l:h:s:b:t:o:r:n:');
+$bridge = '192.168.0.162';
+$key = "290d148316ac52ef1c60057b5cf2667";
+$hue = new Hue( $bridge, $key );
 
-
-
+$args = getopt( 'l:h:s:b:t:o:r:n:' );
 $command = array();
 
-// if we didn't get a -l parameter, build an array of all lights 
-if (isset($args['l'])) {
-	$light = $args['l'];
-} else {
-	$light = getLightIdsList();
+// if we didn't get a -l parameter, build an array of all lights
+if ( isset( $args['l'] ) )
+{
+    $light = $args['l'];
+}
+else
+{
+    $light = $hue->getLightIds();
 }
 
 //handle predefined colors
-if (isset($args['n'])) {
-    $command = predefinedColors($args['n']);
+if ( isset( $args['n'] ) )
+{
+    $command = $hue->predefinedColors( $args['n'] );
 }
 
 // clean up other inputs
 // the hue interface will keep numeric parms within range for us, just sanitize the
 // types for clean json encoding, and do the math on the hue input.
-$fields = array('h' => 'hue', 's' => 'sat', 'b' => 'bri', 
-                't' => 'ct', 'o' => 'on', 'r' => 'transitiontime');
-foreach ($fields as $name => $value) {
-	if (isset($args[$name])) {
-        if ($name == 'o') {
+$fields = array( 'h' => 'hue', 's' => 'sat', 'b' => 'bri',
+                 't' => 'ct', 'o' => 'on', 'r' => 'transitiontime' );
+
+foreach ( $fields as $name => $value )
+{
+    if ( isset( $args[$name] ) )
+    {
+        if ( $name == 'o' )
+        {
             $command[$value] = (bool)$args[$name];
         }
-		elseif ($name == 'h'){
-			$command['hue'] = 182 * $args['h'];
+        else if ( $name == 'h' )
+        {
+            $command['hue'] = 182 * $args['h'];
             $command['on'] = true;
-		}
-        elseif ($name == 'r') {
+        }
+        else if ($name == 'r')
+        {
             $command['transitiontime'] = 10 * $args['r'];
         }
-        else {
+        else
+        {
             $command[$value] = (int)$args[$name];
             $command['on'] = true;
-        } 
-	}
+        }
+    }
 }
 
-
-$result = setLight($light, $command);
-
-//echo "$result\n";
+echo $hue->setLight( $light, $command ) ."\n";
 
 ?>
