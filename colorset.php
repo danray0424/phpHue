@@ -3,12 +3,36 @@
 
 require( 'hue.php' );
 
-$bridge = '192.168.0.162';
-$key = "replace_this_with_the_real_key";
-$hue = new Hue( $bridge, $key );
+function echoHelp()
+{
+    echo "./colorset.php".
+        "\n\t-i [Hue bridge's ip]".
+        "\n\t-k [valid key that is registered with your Hue hub]".
+        "\n\t-l [bulb number]".
+        "\n\t-h [hue in degrees on the color circle 0-360]".
+        "\n\t-s [saturation 0-254]".
+        "\n\t-b [brightness 0-254]".
+        "\n\t-t [white color temp 150-500]".
+        "\n\t-o [0 for turning the bulb off, 1 for turning it on]".
+        "\n\t-r [transition time, in seconds. Decimals are legal (\".1\", for instance)]".
+        "\n\t-n [color name (see below)]\n";
+}
 
-$args = getopt( 'l:h:s:b:t:o:r:n:' );
+$args = getopt( 'i:k:l:h:s:b:t:o:r:n:' );
+$oneParamSet = isset( $args['h'] ) || isset( $args['s'] ) || isset( $args['b'] ) || isset( $args['t'] ) || isset( $args['o'] ) || isset( $args['n'] );
 $command = array();
+
+// we require a bridge ip and key to be specified
+if ( !isset( $args['i'] ) || !isset( $args['k'] ) || !$oneParamSet )
+{
+    $oneParamHelp = $oneParamSet ? "" : " and at least one of the following options: -h, -s, -b, -t, -o or -n.";
+    echo "Error: You need to specify an ip (-i) & key (-k)$oneParamHelp\n\n";
+
+    echoHelp();
+    exit( 0 );
+}
+
+$hue = new Hue( $args['i'], $args['k'] );
 
 // if we didn't get a -l parameter, build an array of all lights
 if ( isset( $args['l'] ) )
