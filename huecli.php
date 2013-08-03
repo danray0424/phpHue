@@ -67,16 +67,17 @@ $lights = array();
 if ( !isset( $args['l'] ) )
     $lights = $hue->lightIds();
 else
-    $lights = [$args['l']];
+    $lights[] = $args['l'];
 
 // do we want to get the lights' state
 if ( isset( $args['c'] ) )
 {
+    $names = $hue->lightName( $lights );
     $state = false;
     foreach ( $lights as $light )
     {
         $state = $hue->isLightOn( $light );
-        echo "Light " .$light. " is " . ( $state ? "on" : "off" ) . "\n";
+        echo "Light " .$light. " (" .$names[$light]. ") is " . ( $state ? "on" : "off" ) . "\n";
     }
 
     exit( ( count( $lights ) == 1 && $state ) ? 1 : 0 );
