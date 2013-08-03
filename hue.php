@@ -107,6 +107,16 @@ class Hue
     }
 
 
+    // Sets the state property of one or more lights
+    function state()
+    {
+        $pest = new Pest( "http://" .$this->bridge. "/api/" .$this->key. "/" );
+        $result = json_decode( $pest->get( "", "" ), true );
+
+        return $result;
+    }
+
+
     // Gin up a random color
     function getRandomColor()
     {
