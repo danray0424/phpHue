@@ -10,18 +10,19 @@ function echoHelp()
         "\n\t-g [register a new key with the Hue bridge]".
         "\n\t-k [valid key that is registered with the Hue hub]".
         "\n\t-f [fetch full state from Hue hub]".
-        "\n\t-l [bulb number]".
+        "\n\t-l [light number]".
+        "\n\t-c [check light state: returns 0 when light is off, 1 when on]".
         "\n\t-h [hue in degrees on the color circle 0-360]".
         "\n\t-s [saturation 0-254]".
         "\n\t-b [brightness 0-254]".
         "\n\t-t [white color temp 150-500]".
-        "\n\t-o [0 for turning the bulb off, 1 for turning it on]".
+        "\n\t-o [0 for turning the light off, 1 for turning it on]".
         "\n\t-r [transition time, in seconds. Decimals are legal (\".1\", for instance)]".
         "\n\t-n [color name (see below)]\n";
 }
 
-$args = getopt( 'i:k:l:h:s:b:t:o:r:n:fg' );
-$oneParamSet = isset( $args['h'] ) || isset( $args['s'] ) || isset( $args['b'] ) || isset( $args['t'] ) || isset( $args['o'] ) || isset( $args['n'] ) || isset( $args['f'] );
+$args = getopt( 'i:k:l:h:s:b:t:o:r:n:cfg' );
+$oneParamSet = isset( $args['h'] ) || isset( $args['s'] ) || isset( $args['b'] ) || isset( $args['t'] ) || isset( $args['o'] ) || isset( $args['n'] ) || isset( $args['f'] ) || isset( $args['c'] );
 $command = array();
 
 if ( isset( $args['i'] ) && isset( $args['g'] ) )
@@ -36,7 +37,7 @@ if ( isset( $args['i'] ) && isset( $args['g'] ) )
     else if ( isset( $data[0]["success"] ) )
     {
         echo "Registered new key with Hue bridge: " .$data[0]["success"]["username"]. "\n";
-        echo "You can now try to turn on a bulb like this:".
+        echo "You can now try to turn on a light like this:".
              "\n\n\t./huecli.php -i " .$args['i']. " -k " .$data[0]["success"]["username"]. " -o 1\n";
     }
     exit( 0 );
@@ -45,14 +46,37 @@ if ( isset( $args['i'] ) && isset( $args['g'] ) )
 // we require a bridge ip and key to be specified
 if ( !isset( $args['i'] ) || !isset( $args['k'] ) || !$oneParamSet )
 {
-    $oneParamHelp = $oneParamSet ? "" : " and at least one of the following options: -f, -h, -s, -b, -t, -o or -n.";
-    echo "Error: You need to specify an ip (-i) & key (-k)$oneParamHelp\n\n";
+    $oneParamHelp = $oneParamSet ? "" : " and at least one of the following options: -f, -h, -s, -b, -t, -o or -n";
+    echo "Error: You need to specify an ip (-i) & key (-k)$oneParamHelp.\n\n";
 
     echoHelp();
     exit( 0 );
 }
 
 $hue = new Hue( $args['i'], $args['k'] );
+
+// do we want to set ot get the bridge's state
+if ( isset( $args['f'] ) )
+{
+    var_dump( $hue->state() );
+    exit( 0 );
+}
+
+// do we want to set ot get the bridge's state
+if ( isset( $args['c'] ) )
+{
+    if ( !isset( $args['l'] ) )
+    {
+        echo "Error: You need to specify which light (-l) to check.\n";
+        exit( 0 );
+    }
+
+    $light = $args['l'];
+    $state = $hue->isLightOn( $light );
+
+    echo "Light " .$light. " is " . ( $state ? "on" : "off" ) . "\n";
+    exit( $state ? 1 : 0 );
+}
 
 // if we didn't get a -l parameter, build an array of all lights
 if ( isset( $args['l'] ) )
@@ -62,13 +86,6 @@ if ( isset( $args['l'] ) )
 else
 {
     $light = $hue->lightIds();
-}
-
-// do we want to set ot get the bridge's state
-if ( isset( $args['f'] ) )
-{
-    var_dump( $hue->state() );
-    exit( 0 );
 }
 
 // handle predefined colors
