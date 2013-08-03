@@ -2,10 +2,161 @@
 
 require( 'pest-master/PestJSON.php' );
 
+class Light
+{
+    private $parent;
+    private $id = 0;
+    private $name = "";
+    private $type = "";
+    private $modelid = "";
+    private $swversion = "";
+    private $state = false;
+    private $reachable = false;
+    private $bri = 0; // 0 to 255
+    private $hue = 0; // 0 to 65535
+    private $sat = 0; // 0 to 255
+    private $ct = 0; // 0 to 500
+    private $alert = "none"; // "none", "select" or "lselect"
+    private $effect = "none"; // "none" or "colorloop"
+    private $colormode = "none"; // "hs", "xy" or "ct"
+
+
+    public function __construct( $parent, $lightid, $json )
+    {
+        $this->parent = $parent;
+        $data = json_decode( $json, true );
+
+        if ( isset( $data["state"] ) )
+        {
+            $this->id = $lightid;
+            $this->name = $data["name"];
+            $this->type = $data["type"];
+            $this->modelid = $data["modelid"];
+            $this->swversion = $data["swversion"];
+            $this->state = $data["state"]["on"];
+            $this->reachable = $data["state"]["reachable"];
+            $this->bri = $data["state"]["bri"];
+            $this->hue = $data["state"]["hue"];
+            $this->sat = $data["state"]["sat"];
+            $this->ct = $data["state"]["ct"];
+            $this->alert = $data["state"]["alert"];
+            $this->effect = $data["state"]["effect"];
+            $this->colormode = $data["state"]["colormode"];
+        }
+    }
+
+
+    public function id()
+    {
+        return $this->id;
+    }
+
+
+    public function name()
+    {
+        return $this->name;
+    }
+
+
+    public function type()
+    {
+        return $this->type;
+    }
+
+
+    public function modelid()
+    {
+        return $this->modelid;
+    }
+
+
+    public function swversion()
+    {
+        return $this->swversion;
+    }
+
+
+    public function state()
+    {
+        return $this->state;
+    }
+
+
+    public function reachable()
+    {
+        return $this->reachable;
+    }
+
+
+    public function bri()
+    {
+        return $this->bri;
+    }
+
+
+    public function hue()
+    {
+        return $this->hue;
+    }
+
+
+    public function sat()
+    {
+        return $this->sat;
+    }
+
+
+    public function ct()
+    {
+        return $this->ct;
+    }
+
+
+    public function alert()
+    {
+        return $this->alert;
+    }
+
+
+    public function effect()
+    {
+        return $this->effect;
+    }
+
+
+    public function colormode()
+    {
+        return $this->colormode;
+    }
+
+
+    // Sets the alert state. 'select' blinks once, 'lselect' blinks repeatedly, 'none' turns off blinking
+    public function setAlert( $type = 'select' )
+    {
+        $data = json_encode(array( "alert" => $type ) );
+        $pest = $this->parent->makePest();
+        $pest->put( "lights/" .$this->id. "/state", $data );
+
+        $this->parent->update( $this->id );
+    }
+
+
+    // Sets the state property
+    public function setLight( $input )
+    {
+        $data = json_encode( $input );
+        $pest = $this->parent->makePest();
+        $pest->put( "lights/" .$this->id. "/state", $data );
+
+        $this->parent->update( $this->id );
+    }
+}
+
 class Hue
 {
     private $bridge;
     private $key;
+    private $lights;
 
 
     public function __construct( $bridge, $key )
@@ -15,19 +166,19 @@ class Hue
     }
 
 
-    private function makePest()
+    public function makePest()
     {
         return new Pest( "http://" .$this->bridge. "/api/" .$this->key. "/" );
     }
 
 
-    private function makeLightArray( $lightid )
+    private function makeLightArray( $lightid = false )
     {
         $targets = array();
 
         if ( $lightid === false )
         {
-            $targets = lightIds();
+            $targets = $this->lightIds();
         }
         else
         {
@@ -56,44 +207,22 @@ class Hue
     }
 
 
-    // Returns a state array of either a single or all your lights
-    public function lightState( $lightid = false )
+    public function update( $lightid = false )
     {
-        $result = array();
-        $targets = $this->makeLightArray( $lightid );
-
-        foreach ( $targets as $id )
+        $lights = $this->makeLightArray( $lightid );
+        foreach ( $lights as $id )
         {
             $pest = $this->makePest();
-            $deets = json_decode( $pest->get( "lights/$id" ), true );
-            $result[$id] = $deets['state'];
-        }
+            $data = $pest->get( "lights/$id" );
 
-        return $result;
+            $this->lights[ $id ] = new Light( $this, $id, $data );
+        }
     }
 
 
-    // Returns a name array of either a single or all your lights
-    public function lightName( $lightid = false )
+    public function lights()
     {
-        $result = array();
-        $targets = $this->makeLightArray( $lightid );
-
-        foreach ( $targets as $id )
-        {
-            $pest = $this->makePest();
-            $deets = json_decode( $pest->get( "lights/$id" ), true );
-            $result[$id] = $deets['name'];
-        }
-
-        return $result;
-    }
-
-
-    // Returns a bool indicating whether a particular light is turned on
-    public function isLightOn( $lightid )
-    {
-        return $this->lightState( $lightid )[$lightid]['on'];
+        return $this->lights;
     }
 
 
@@ -108,42 +237,11 @@ class Hue
     }
 
 
-    // Sets the alert state of a single light. 'select' blinks once, 'lselect' blinks repeatedly, 'none' turns off blinking
-    public function alertLight( $target, $type = 'select' )
-    {
-        $pest = $this->makePest();
-        $data = json_encode(array( "alert" => $type ) );
-        $result = $pest->put( "lights/$target/state", $data );
-
-        return $result;
-    }
-
-
-    // Sets the state property of one or more lights
-    public function setLight( $lightid, $input )
-    {
-        $result = '';
-        $pest = $this->makePest();
-        $data = json_encode( $input );
-        $targets = $this->makeLightArray( $lightid );
-
-        foreach ( $targets as $id )
-        {
-            $pest = new Pest( "http://" .$this->bridge. "/api/" .$this->key. "/" );
-            $result .= $pest->put( "lights/$id/state", $data );
-        }
-
-        return $result;
-    }
-
-
     // Gets the full state of the bridge
     public function state()
     {
         $pest = $this->makePest();
-        $result = json_decode( $pest->get( "" ), true );
-
-        return $result;
+        return $pest->get( "" );
     }
 
 
