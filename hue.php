@@ -127,7 +127,7 @@ class Hue
         $data = json_encode( $input );
         $targets = $this->makeLightArray( $lightid );
 
-        foreach ( $lightid as $id )
+        foreach ( $targets as $id )
         {
             $pest = new Pest( "http://" .$this->bridge. "/api/" .$this->key. "/" );
             $result .= $pest->put( "lights/$id/state", $data );
