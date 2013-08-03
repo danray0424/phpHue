@@ -19,6 +19,7 @@ function echoHelp()
         "\n\t-o [0 for turning the light off, 1 for turning it on]".
         "\n\t-r [transition time, in seconds. Decimals are legal (\".1\", for instance)]".
         "\n\t-n [color name (see below)]".
+        "\n\t-a [new name for the light]".
         "\n\t-e [command to execute before changing light setting]\n";
 }
 
@@ -42,8 +43,8 @@ function echoLightState( $lights )
     return $state;
 }
 
-$args = getopt( 'i:k:l:h:s:b:t:o:r:n:e:cfg' );
-$oneParamSet = isset( $args['h'] ) || isset( $args['s'] ) || isset( $args['b'] ) || isset( $args['t'] ) || isset( $args['o'] ) || isset( $args['n'] ) || isset( $args['f'] ) || isset( $args['c'] );
+$args = getopt( 'i:k:l:h:s:b:t:o:r:n:e:a:cfg' );
+$oneParamSet = isset( $args['h'] ) || isset( $args['s'] ) || isset( $args['b'] ) || isset( $args['t'] ) || isset( $args['o'] ) || isset( $args['n'] ) || isset( $args['f'] ) || isset( $args['c'] ) || isset( $args['a'] );
 $command = array();
 
 if ( isset( $args['i'] ) && isset( $args['g'] ) )
@@ -67,7 +68,7 @@ if ( isset( $args['i'] ) && isset( $args['g'] ) )
 // we require a bridge ip and key to be specified
 if ( !isset( $args['i'] ) || !isset( $args['k'] ) || !$oneParamSet )
 {
-    $oneParamHelp = $oneParamSet ? "" : " and at least one of the following options: -f, -c, -h, -s, -b, -t, -o or -n";
+    $oneParamHelp = $oneParamSet ? "" : " and at least one of the following options: -f, -c, -h, -s, -b, -t, -o, -n or -a";
     echo "Error: You need to specify an ip (-i) & key (-k)$oneParamHelp.\n\n";
 
     echoHelp();
@@ -90,6 +91,19 @@ if ( !isset( $args['l'] ) )
     $lights = $hue->lightIds();
 else
     $lights[] = $args['l'];
+
+if ( isset( $args['a'] ) )
+{
+    if ( count( $lights ) != 1 )
+    {
+        echo "Error: -a must be invoked with exactly one light (-l).";
+        exit( 0 );
+    }
+
+    $hue->lights()[$lights[0]]->setName( $args['a'] );
+    echoLightState( $lights );
+    exit( 0 );
+}
 
 // do we want to get the lights' state
 if ( isset( $args['c'] ) )
