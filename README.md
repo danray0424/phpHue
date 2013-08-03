@@ -17,19 +17,21 @@ colorset.php
 
 colorset.php is a command line light changer. On the command line:
 
-	./colorset.php
-		-l [lightnumber]
-		-h [hue in degrees on the color circle 0-360]
-		-s [saturation 0-254]
-	    -b [brightness 0-254]
-		-t [white color temp 150-500]
-		-o [on or off, 0-1 or something else that will cast to a boolean]
-		-r [transition time, in seconds. Decimals legal (".1", for instance)]
-		-n [color name (see below)]
+    ./colorset.php
+        -i [Hue bridge's ip]
+        -k [valid key that is registered with your Hue hub]
+        -l [bulb number]
+        -h [hue in degrees on the color circle 0-360]
+        -s [saturation 0-254]
+        -b [brightness 0-254]
+        -t [white color temp 150-500]
+        -o [0 for turning the bulb off, 1 for turning it on]
+        -r [transition time, in seconds. Decimals are legal (".1", for instance)]
+        -n [color name (see below)]
 
-All parameters are optional. If you don't specify a light, it'll set the values you specify on all of them.
+You need to specify an ip (-i), a key (-k) and at least one of the following options: -h, -s, -b, -t, -o or -n. If you don't specify a light, it'll set the values you specify on all of them.
 
-You can turn lights on or off with the -o switch. Any other parameter implies '-o true'. In other words, if you specify another parameter while the lamp is off, we'll turn it on for you. Not sure what happens if you say '-h 90 -o false', you're on your own there.
+You can turn lights on or off with the -o switch. Any other parameter implies '-o 1'. In other words, if you specify any other parameter when the lamp is off, we'll turn it on for you.
 
 ### Presets ###
 
