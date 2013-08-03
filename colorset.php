@@ -7,7 +7,8 @@ function echoHelp()
 {
     echo "./colorset.php".
         "\n\t-i [Hue bridge's ip]".
-        "\n\t-k [valid key that is registered with your Hue hub]".
+        "\n\t-g [register a new key with the Hue bridge]".
+        "\n\t-k [valid key that is registered with the Hue hub]".
         "\n\t-l [bulb number]".
         "\n\t-h [hue in degrees on the color circle 0-360]".
         "\n\t-s [saturation 0-254]".
@@ -18,9 +19,27 @@ function echoHelp()
         "\n\t-n [color name (see below)]\n";
 }
 
-$args = getopt( 'i:k:l:h:s:b:t:o:r:n:' );
+$args = getopt( 'i:k:l:h:s:b:t:o:r:n:g' );
 $oneParamSet = isset( $args['h'] ) || isset( $args['s'] ) || isset( $args['b'] ) || isset( $args['t'] ) || isset( $args['o'] ) || isset( $args['n'] );
 $command = array();
+
+if ( isset( $args['i'] ) && isset( $args['g'] ) )
+{
+    $hue = new Hue( $args['i'], '' );
+    $data = json_decode( $hue->register(), true );
+
+    if ( isset( $data[0]["error"] ) )
+    {
+        echo "Error: Registering new key with Hue bridge failed. Did you forget to press the link button?\n";
+    }
+    else if ( isset( $data[0]["success"] ) )
+    {
+        echo "Registered new key with Hue bridge: " .$data[0]["success"]["username"]. "\n";
+        echo "You can now try to turn on a bulb like this:".
+             "\n\n\t./colorset.php -i " .$args['i']. " -k " .$data[0]["success"]["username"]. " -o 1\n";
+    }
+    exit( 0 );
+}
 
 // we require a bridge ip and key to be specified
 if ( !isset( $args['i'] ) || !isset( $args['k'] ) || !$oneParamSet )
