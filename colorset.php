@@ -4,7 +4,7 @@
 require( 'hue.php' );
 
 $bridge = '192.168.0.162';
-$key = "290d148316ac52ef1c60057b5cf2667";
+$key = "replace_this_with_the_real_key";
 $hue = new Hue( $bridge, $key );
 
 $args = getopt( 'l:h:s:b:t:o:r:n:' );
