@@ -6,7 +6,7 @@ require( '../hue.php' );
 $bridge = '192.168.0.162';
 $key = "replace_this_with_the_real_key";
 $hue = new Hue( $bridge, $key );
-$lightRange = [ 4, 5 ];
+$lightRange = [ 1, 3 ];
 
 while ( true )
 {
