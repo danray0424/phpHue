@@ -46,7 +46,7 @@ if ( isset( $args['i'] ) && isset( $args['g'] ) )
 // we require a bridge ip and key to be specified
 if ( !isset( $args['i'] ) || !isset( $args['k'] ) || !$oneParamSet )
 {
-    $oneParamHelp = $oneParamSet ? "" : " and at least one of the following options: -f, -h, -s, -b, -t, -o or -n";
+    $oneParamHelp = $oneParamSet ? "" : " and at least one of the following options: -f, -c, -h, -s, -b, -t, -o or -n";
     echo "Error: You need to specify an ip (-i) & key (-k)$oneParamHelp.\n\n";
 
     echoHelp();
@@ -62,30 +62,24 @@ if ( isset( $args['f'] ) )
     exit( 0 );
 }
 
-// do we want to set ot get the bridge's state
+// if we didn't get a -l parameter, build an array of all lights
+$lights = array();
+if ( !isset( $args['l'] ) )
+    $lights = $hue->lightIds();
+else
+    $lights = [$args['l']];
+
+// do we want to get the lights' state
 if ( isset( $args['c'] ) )
 {
-    if ( !isset( $args['l'] ) )
+    $state = false;
+    foreach ( $lights as $light )
     {
-        echo "Error: You need to specify which light (-l) to check.\n";
-        exit( 0 );
+        $state = $hue->isLightOn( $light );
+        echo "Light " .$light. " is " . ( $state ? "on" : "off" ) . "\n";
     }
 
-    $light = $args['l'];
-    $state = $hue->isLightOn( $light );
-
-    echo "Light " .$light. " is " . ( $state ? "on" : "off" ) . "\n";
-    exit( $state ? 1 : 0 );
-}
-
-// if we didn't get a -l parameter, build an array of all lights
-if ( isset( $args['l'] ) )
-{
-    $light = $args['l'];
-}
-else
-{
-    $light = $hue->lightIds();
+    exit( ( count( $lights ) == 1 && $state ) ? 1 : 0 );
 }
 
 // handle predefined colors
@@ -99,7 +93,6 @@ if ( isset( $args['n'] ) )
 // types for clean json encoding, and do the math on the hue input.
 $fields = array( 'h' => 'hue', 's' => 'sat', 'b' => 'bri',
                  't' => 'ct', 'o' => 'on', 'r' => 'transitiontime' );
-
 foreach ( $fields as $name => $value )
 {
     if ( isset( $args[$name] ) )
@@ -125,6 +118,6 @@ foreach ( $fields as $name => $value )
     }
 }
 
-echo $hue->setLight( $light, $command ) ."\n";
+echo $hue->setLight( $lights, $command ) ."\n";
 
 ?>
