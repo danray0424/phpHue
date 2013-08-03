@@ -27,14 +27,14 @@ class Hue
 
 
     // Returns a state array of either a single bulb or all your lights
-    function getLightState( $lightid = false )
+    function lightState( $lightid = false )
     {
         $targets = array();
         $result = array();
 
         if ( $lightid === false )
         {
-            $targets = getLightIds();
+            $targets = lightIds();
         }
         else
         {
@@ -62,7 +62,7 @@ class Hue
 
 
     // Returns an array of the light numbers in the system
-    function getLightIds()
+    function lightIds()
     {
         $pest = new Pest( "http://" .$this->bridge. "/api/" .$this->key. "/" );
         $result = json_decode( $pest->get( 'lights' ), true );
@@ -107,18 +107,28 @@ class Hue
     }
 
 
-    // Sets the state property of one or more lights
+    // Gets the full state of the bridge
     function state()
     {
         $pest = new Pest( "http://" .$this->bridge. "/api/" .$this->key. "/" );
-        $result = json_decode( $pest->get( "", "" ), true );
+        $result = json_decode( $pest->get( "" ), true );
+
+        return $result;
+    }
+
+
+    // Gets an array of currently configured schedules
+    function schedules()
+    {
+        $pest = new Pest( "http://" .$this->bridge. "/api/" .$this->key. "/" );
+        $result = json_decode( $pest->get( "schedules" ), true );
 
         return $result;
     }
 
 
     // Gin up a random color
-    function getRandomColor()
+    function randomColor()
     {
         $return = array();
 
@@ -131,7 +141,7 @@ class Hue
 
 
     // Gin up a random temp-based white setting
-    function getRandomWhite()
+    function randomWhite()
     {
         $return = array();
         $return['ct'] = rand( 150, 500 );
@@ -148,35 +158,53 @@ class Hue
         switch ( $colorname )
         {
             case "green":
-                $command['hue'] =  182 * 140;
+                $command['hue'] = 182 * 140;
                 $command['sat'] = 254;
                 $command['bri'] = 254;
                 break;
 
             case "red":
-                $command['hue'] =  0;
+                $command['hue'] = 0;
                 $command['sat'] = 254;
                 $command['bri'] = 254;
                 break;
 
             case "blue":
-                $command['hue'] =  182 * 250;
+                $command['hue'] = 182 * 250;
                 $command['sat'] = 254;
                 $command['bri'] = 254;
                 break;
 
             case "coolwhite":
-                $command['ct'] =  150;
+                $command['ct']  = 150;
                 $command['bri'] = 254;
                 break;
 
             case "warmwhite":
-                $command['ct'] =  500;
+                $command['ct']  = 500;
+                $command['bri'] = 254;
+                break;
+
+            case "orange":
+                $command['hue'] = 182 * 25;
+                $command['sat'] = 254;
+                $command['bri'] = 254;
+                break;
+
+            case "yellow":
+                $command['hue'] = 182 * 85;
+                $command['sat'] = 254;
+                $command['bri'] = 254;
+                break;
+
+            case "pink":
+                $command['hue'] = 182 * 300;
+                $command['sat'] = 254;
                 $command['bri'] = 254;
                 break;
 
             case "purple":
-                $command['hue'] =  182 * 270;
+                $command['hue'] = 182 * 270;
                 $command['sat'] = 254;
                 $command['bri'] = 254;
                 break;
