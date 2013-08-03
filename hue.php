@@ -21,22 +21,9 @@ class Hue
     }
 
 
-    // Registers with a Hue hub
-    public function register()
-    {
-        $pest = new Pest( "http://" .$this->bridge. "/api" );
-        $data = json_encode( array( 'devicetype' => 'phpHue' ) );
-        $result = $pest->post( '', $data );
-
-        return $result;
-    }
-
-
-    // Returns a state array of either a single or all your lights
-    public function lightState( $lightid = false )
+    private function makeLightArray( $lightid )
     {
         $targets = array();
-        $result = array();
 
         if ( $lightid === false )
         {
@@ -54,13 +41,49 @@ class Hue
             }
         }
 
+        return $targets;
+    }
+
+
+    // Registers with a Hue hub
+    public function register()
+    {
+        $pest = new Pest( "http://" .$this->bridge. "/api" );
+        $data = json_encode( array( 'devicetype' => 'phpHue' ) );
+        $result = $pest->post( '', $data );
+
+        return $result;
+    }
+
+
+    // Returns a state array of either a single or all your lights
+    public function lightState( $lightid = false )
+    {
+        $result = array();
+        $targets = $this->makeLightArray( $lightid );
+
         foreach ( $targets as $id )
         {
             $pest = $this->makePest();
             $deets = json_decode( $pest->get( "lights/$id" ), true );
-            $state = $deets['state'];
+            $result[$id] = $deets['state'];
+        }
 
-            $result[$id] = $state;
+        return $result;
+    }
+
+
+    // Returns a name array of either a single or all your lights
+    public function lightName( $lightid = false )
+    {
+        $result = array();
+        $targets = $this->makeLightArray( $lightid );
+
+        foreach ( $targets as $id )
+        {
+            $pest = $this->makePest();
+            $deets = json_decode( $pest->get( "lights/$id" ), true );
+            $result[$id] = $deets['name'];
         }
 
         return $result;
@@ -99,21 +122,15 @@ class Hue
     // Sets the state property of one or more lights
     public function setLight( $lightid, $input )
     {
+        $result = '';
         $pest = $this->makePest();
         $data = json_encode( $input );
-        $result = '';
+        $targets = $this->makeLightArray( $lightid );
 
-        if ( is_array( $lightid ) )
+        foreach ( $lightid as $id )
         {
-            foreach ( $lightid as $id )
-            {
-                $pest = new Pest( "http://" .$this->bridge. "/api/" .$this->key. "/" );
-                $result .= $pest->put( "lights/$id/state", $data );
-            }
-        }
-        else
-        {
-            $result = $pest->put( "lights/$lightid/state", $data );
+            $pest = new Pest( "http://" .$this->bridge. "/api/" .$this->key. "/" );
+            $result .= $pest->put( "lights/$id/state", $data );
         }
 
         return $result;
