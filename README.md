@@ -1,7 +1,7 @@
 phpHue
 ======
 
-PHP class for interacting with the Phillips Hue lighting system
+PHP class for interacting with the Philips Hue lighting system
 
 Getting Started
 ---------------
