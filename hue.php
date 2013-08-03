@@ -15,8 +15,14 @@ class Hue
     }
 
 
+    private function makePest()
+    {
+        return new Pest( "http://" .$this->bridge. "/api/" .$this->key. "/" );
+    }
+
+
     // Registers with a Hue hub
-    function register()
+    public function register()
     {
         $pest = new Pest( "http://" .$this->bridge. "/api" );
         $data = json_encode( array( 'devicetype' => 'phpHue' ) );
@@ -27,7 +33,7 @@ class Hue
 
 
     // Returns a state array of either a single bulb or all your lights
-    function lightState( $lightid = false )
+    public function lightState( $lightid = false )
     {
         $targets = array();
         $result = array();
@@ -50,7 +56,7 @@ class Hue
 
         foreach ( $targets as $id )
         {
-            $pest = new Pest( "http://" .$this->bridge. "/api/" .$this->key. "/" );
+            $pest = $this->makePest();
             $deets = json_decode( $pest->get( "lights/$id" ), true );
             $state = $deets['state'];
 
@@ -62,9 +68,9 @@ class Hue
 
 
     // Returns an array of the light numbers in the system
-    function lightIds()
+    public function lightIds()
     {
-        $pest = new Pest( "http://" .$this->bridge. "/api/" .$this->key. "/" );
+        $pest = $this->makePest();
         $result = json_decode( $pest->get( 'lights' ), true );
         $targets = array_keys( $result );
 
@@ -73,9 +79,9 @@ class Hue
 
 
     // Sets the alert state of a single light. 'select' blinks once, 'lselect' blinks repeatedly, 'none' turns off blinking
-    function alertLight( $target, $type = 'select' )
+    public function alertLight( $target, $type = 'select' )
     {
-        $pest = new Pest( "http://" .$this->bridge. "/api/" .$this->key. "/" );
+        $pest = $this->makePest();
         $data = json_encode(array( "alert" => $type ) );
         $result = $pest->put( "lights/$target/state", $data );
 
@@ -84,9 +90,9 @@ class Hue
 
 
     // Sets the state property of one or more lights
-    function setLight( $lightid, $input )
+    public function setLight( $lightid, $input )
     {
-        $pest = new Pest( "http://" .$this->bridge. "/api/" .$this->key. "/" );
+        $pest = $this->makePest();
         $data = json_encode( $input );
         $result = '';
 
@@ -108,9 +114,9 @@ class Hue
 
 
     // Gets the full state of the bridge
-    function state()
+    public function state()
     {
-        $pest = new Pest( "http://" .$this->bridge. "/api/" .$this->key. "/" );
+        $pest = $this->makePest();
         $result = json_decode( $pest->get( "" ), true );
 
         return $result;
@@ -118,9 +124,9 @@ class Hue
 
 
     // Gets an array of currently configured schedules
-    function schedules()
+    public function schedules()
     {
-        $pest = new Pest( "http://" .$this->bridge. "/api/" .$this->key. "/" );
+        $pest = $this->makePest();
         $result = json_decode( $pest->get( "schedules" ), true );
 
         return $result;
@@ -128,7 +134,7 @@ class Hue
 
 
     // Gin up a random color
-    function randomColor()
+    public function randomColor()
     {
         $return = array();
 
@@ -141,7 +147,7 @@ class Hue
 
 
     // Gin up a random temp-based white setting
-    function randomWhite()
+    public function randomWhite()
     {
         $return = array();
         $return['ct'] = rand( 150, 500 );
@@ -152,7 +158,7 @@ class Hue
 
 
     // Build a few color commands based on color names
-    function predefinedColors( $colorname )
+    public function predefinedColors( $colorname )
     {
         $command = array();
         switch ( $colorname )
