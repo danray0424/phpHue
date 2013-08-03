@@ -21,6 +21,21 @@ function echoHelp()
         "\n\t-n [color name (see below)]\n";
 }
 
+function echoLightState( $lights )
+{
+    global $hue;
+    $names = $hue->lightName( $lights );
+    $state = '';
+
+    foreach ( $lights as $light )
+    {
+        $state = $hue->isLightOn( $light );
+        echo "Light " .$light. " (" .$names[$light]. ") is " . ( $state ? "on" : "off" ) . "\n";
+    }
+
+    return $state;
+}
+
 $args = getopt( 'i:k:l:h:s:b:t:o:r:n:cfg' );
 $oneParamSet = isset( $args['h'] ) || isset( $args['s'] ) || isset( $args['b'] ) || isset( $args['t'] ) || isset( $args['o'] ) || isset( $args['n'] ) || isset( $args['f'] ) || isset( $args['c'] );
 $command = array();
@@ -58,7 +73,8 @@ $hue = new Hue( $args['i'], $args['k'] );
 // do we want to set ot get the bridge's state
 if ( isset( $args['f'] ) )
 {
-    var_dump( $hue->state() );
+    $state = $hue->state();
+    var_dump( $state );
     exit( 0 );
 }
 
@@ -72,14 +88,7 @@ else
 // do we want to get the lights' state
 if ( isset( $args['c'] ) )
 {
-    $names = $hue->lightName( $lights );
-    $state = false;
-    foreach ( $lights as $light )
-    {
-        $state = $hue->isLightOn( $light );
-        echo "Light " .$light. " (" .$names[$light]. ") is " . ( $state ? "on" : "off" ) . "\n";
-    }
-
+    $state = echoLightState( $lights );
     exit( ( count( $lights ) == 1 && $state ) ? 1 : 0 );
 }
 
@@ -119,6 +128,7 @@ foreach ( $fields as $name => $value )
     }
 }
 
-echo $hue->setLight( $lights, $command ) ."\n";
+$hue->setLight( $lights, $command );
+echoLightState( $lights );
 
 ?>
