@@ -8,17 +8,23 @@ $key = "replace_this_with_the_real_key";
 $hue = new Hue( $bridge, $key );
 $light = 1;
 
-$hue->setLight( $light, predefinedColors( 'green' ) );
+$hue->setLight( $light, $hue->predefinedColors( 'green' ) );
 sleep( 1 );
-$hue->setLight( $light, predefinedColors( 'red' ) );
+$hue->setLight( $light, $hue->predefinedColors( 'red' ) );
 sleep( 1 );
-$hue->setLight( $light, predefinedColors( 'blue' ) );
+$hue->setLight( $light, $hue->predefinedColors( 'blue' ) );
 sleep( 1 );
-$hue->setLight( $light, predefinedColors( 'purple' ) );
+$hue->setLight( $light, $hue->predefinedColors( 'purple' ) );
 sleep( 1 );
-$hue->setLight( $light, predefinedColors( 'coolwhite' ) );
+$hue->setLight( $light, $hue->predefinedColors( 'pink' ) );
 sleep( 1 );
-$hue->setLight( $light, predefinedColors( 'warmwhite' ) );
+$hue->setLight( $light, $hue->predefinedColors( 'yellow' ) );
+sleep( 1 );
+$hue->setLight( $light, $hue->predefinedColors( 'orange' ) );
+sleep( 1 );
+$hue->setLight( $light, $hue->predefinedColors( 'coolwhite' ) );
+sleep( 1 );
+$hue->setLight( $light, $hue->predefinedColors( 'warmwhite' ) );
 sleep( 1 );
 
 ?>
