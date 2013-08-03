@@ -25,13 +25,12 @@ function echoHelp()
 function echoLightState( $lights )
 {
     global $hue;
-    $names = $hue->lightName( $lights );
     $state = '';
 
     foreach ( $lights as $light )
     {
-        $state = $hue->isLightOn( $light );
-        echo "Light " .$light. " (" .$names[$light]. ") is " . ( $state ? "on" : "off" ) . "\n";
+        $state = $hue->lights()[ $light ]->state();
+        echo "Light " .$light. " (" .$hue->lights()[ $light ]->name(). ") is " . ( $state ? "on" : "off" ) . "\n";
     }
 
     return $state;
@@ -70,12 +69,13 @@ if ( !isset( $args['i'] ) || !isset( $args['k'] ) || !$oneParamSet )
 }
 
 $hue = new Hue( $args['i'], $args['k'] );
+$hue->update();
 
 // do we want to set ot get the bridge's state
 if ( isset( $args['f'] ) )
 {
     $state = $hue->state();
-    var_dump( $state );
+    var_dump( json_decode( $state, true ) );
     exit( 0 );
 }
 
@@ -136,7 +136,10 @@ if ( isset( $args['e'] ) )
     echo "\n";
 }
 
-$hue->setLight( $lights, $command );
+foreach ( $lights as $light )
+{
+    $hue->lights()[$light]->setLight( $command );
+}
 echoLightState( $lights );
 
 ?>
