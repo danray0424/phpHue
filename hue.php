@@ -133,7 +133,18 @@ class Light
     // Sets the alert state. 'select' blinks once, 'lselect' blinks repeatedly, 'none' turns off blinking
     public function setAlert( $type = 'select' )
     {
-        $data = json_encode(array( "alert" => $type ) );
+        $data = json_encode( array( "alert" => $type ) );
+        $pest = $this->parent->makePest();
+        $pest->put( "lights/" .$this->id. "/state", $data );
+
+        $this->parent->update( $this->id );
+    }
+
+
+    // Sets the effect state. 'colorloop' cycles through all hues using the current brightness and saturation settings, 'none' turns off the effect
+    public function setEffect( $type = 'colorloop' )
+    {
+        $data = json_encode( array( "effect" => $type ) );
         $pest = $this->parent->makePest();
         $pest->put( "lights/" .$this->id. "/state", $data );
 
@@ -147,6 +158,17 @@ class Light
         $data = json_encode( $input );
         $pest = $this->parent->makePest();
         $pest->put( "lights/" .$this->id. "/state", $data );
+
+        $this->parent->update( $this->id );
+    }
+
+
+    // Sets a new name
+    public function setName( $name )
+    {
+        $data = json_encode( array( "name" => $name ) );
+        $pest = $this->parent->makePest();
+        $pest->put( "lights/" .$this->id, $data );
 
         $this->parent->update( $this->id );
     }
