@@ -7,9 +7,6 @@ Getting Started
 ---------------
 
 hue.php contains the entire phpHue class and all its functions for interacting with the Hue hub.
-
-Edit register.php and replace $bridge with your own hub's IP address. Then press your hub's link button and run register.php. That'll register a new user with your hub and will print out the freshly created username (the hex string). You can use that to initialize a new Hue object and communicate with your hub.
-
 Check out the "samples" directory. You'll find a few demos, showing you how to interact with phpHue. It uses the PEST php REST client for ease of communication, but as a user of phpHue, you don't need to worry about the details.
 
 colorset.php
@@ -19,6 +16,7 @@ colorset.php is a command line light changer. On the command line:
 
     ./colorset.php
         -i [Hue bridge's ip]
+        -g [register a new key with the Hue bridge]
         -k [valid key that is registered with your Hue hub]
         -l [bulb number]
         -h [hue in degrees on the color circle 0-360]
@@ -30,6 +28,7 @@ colorset.php is a command line light changer. On the command line:
         -n [color name (see below)]
 
 You need to specify an ip (-i), a key (-k) and at least one of the following options: -h, -s, -b, -t, -o or -n. If you don't specify a light, it'll set the values you specify on all of them.
+If you don't have a key yet, you can register one by calling colorset.php with -g.
 
 You can turn lights on or off with the -o switch. Any other parameter implies '-o 1'. In other words, if you specify any other parameter when the lamp is off, we'll turn it on for you.
 
