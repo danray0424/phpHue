@@ -32,7 +32,7 @@ class Hue
     }
 
 
-    // Returns a state array of either a single bulb or all your lights
+    // Returns a state array of either a single or all your lights
     public function lightState( $lightid = false )
     {
         $targets = array();
@@ -64,6 +64,13 @@ class Hue
         }
 
         return $result;
+    }
+
+
+    // Returns a bool indicating whether a particular light is turned on
+    public function isLightOn( $lightid )
+    {
+        return $this->lightState( $lightid )[$lightid]['on'];
     }
 
 
