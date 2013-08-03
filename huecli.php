@@ -27,10 +27,16 @@ function echoLightState( $lights )
     global $hue;
     $state = '';
 
-    foreach ( $lights as $light )
+    foreach ( $lights as $lightid )
     {
-        $state = $hue->lights()[ $light ]->state();
-        echo "Light " .$light. " (" .$hue->lights()[ $light ]->name(). ") is " . ( $state ? "on" : "off" ) . "\n";
+        $light = $hue->lights()[ $lightid ];
+        echo "Light " .$lightid. ": ".
+             $light->name(). " is ".
+             ( $light->reachable() ? ( $light->state() ? "on" : "off" ) : "not reachable" ).
+             " (Bri " .$light->bri().
+             ", Hue " .$light->hue().
+             ", Sat " .$light->sat().
+             ", ct " .$light->ct(). ")\n";
     }
 
     return $state;
