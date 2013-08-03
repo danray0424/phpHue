@@ -29,6 +29,7 @@ huecli.php is a command line light changer. On the command line:
         -o [0 for turning the light off, 1 for turning it on]
         -r [transition time, in seconds. Decimals are legal (".1", for instance)]
         -n [color name (see below)]
+        -e [command to execute before changing light setting]
 
 You need to specify an ip (-i), a key (-k) and at least one of the following options: -h, -s, -b, -t, -o or -n. If you don't specify a light, it'll set the values you specify on all of them.
 

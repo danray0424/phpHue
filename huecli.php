@@ -18,7 +18,8 @@ function echoHelp()
         "\n\t-t [white color temp 150-500]".
         "\n\t-o [0 for turning the light off, 1 for turning it on]".
         "\n\t-r [transition time, in seconds. Decimals are legal (\".1\", for instance)]".
-        "\n\t-n [color name (see below)]\n";
+        "\n\t-n [color name (see below)]".
+        "\n\t-e [command to execute before changing light setting]\n";
 }
 
 function echoLightState( $lights )
@@ -36,7 +37,7 @@ function echoLightState( $lights )
     return $state;
 }
 
-$args = getopt( 'i:k:l:h:s:b:t:o:r:n:cfg' );
+$args = getopt( 'i:k:l:h:s:b:t:o:r:n:e:cfg' );
 $oneParamSet = isset( $args['h'] ) || isset( $args['s'] ) || isset( $args['b'] ) || isset( $args['t'] ) || isset( $args['o'] ) || isset( $args['n'] ) || isset( $args['f'] ) || isset( $args['c'] );
 $command = array();
 
@@ -96,6 +97,7 @@ if ( isset( $args['c'] ) )
 if ( isset( $args['n'] ) )
 {
     $command = $hue->predefinedColors( $args['n'] );
+    $command['on'] = true;
 }
 
 // clean up other inputs
@@ -126,6 +128,12 @@ foreach ( $fields as $name => $value )
             $command['on'] = true;
         }
     }
+}
+
+if ( isset( $args['e'] ) )
+{
+    passthru( $args['e'] );
+    echo "\n";
 }
 
 $hue->setLight( $lights, $command );
