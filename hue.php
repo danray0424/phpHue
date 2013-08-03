@@ -163,6 +163,8 @@ class Hue
     {
         $this->bridge = $bridge;
         $this->key = $key;
+
+        $hue->update();
     }
 
 

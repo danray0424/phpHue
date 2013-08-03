@@ -69,7 +69,6 @@ if ( !isset( $args['i'] ) || !isset( $args['k'] ) || !$oneParamSet )
 }
 
 $hue = new Hue( $args['i'], $args['k'] );
-$hue->update();
 
 // do we want to set ot get the bridge's state
 if ( isset( $args['f'] ) )
