@@ -11,7 +11,7 @@ $lightRange = [ 1, 3 ];
 while ( true )
 {
     $target = rand( $lightRange[0], $lightRange[1] );
-    $uhe->setLight( $target, $hue->randomColor() );
+    $hue->lights()[$target]->setLight( $hue->randomColor() );
     usleep( 100000 );
 }
 ?>

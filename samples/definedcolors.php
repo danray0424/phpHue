@@ -8,23 +8,23 @@ $key = "replace_this_with_the_real_key";
 $hue = new Hue( $bridge, $key );
 $light = 1;
 
-$hue->setLight( $light, $hue->predefinedColors( 'green' ) );
+$hue->lights()[$light]->setLight( $hue->predefinedColors( 'green' ) );
 sleep( 1 );
-$hue->setLight( $light, $hue->predefinedColors( 'red' ) );
+$hue->lights()[$light]->setLight( $hue->predefinedColors( 'red' ) );
 sleep( 1 );
-$hue->setLight( $light, $hue->predefinedColors( 'blue' ) );
+$hue->lights()[$light]->setLight( $hue->predefinedColors( 'blue' ) );
 sleep( 1 );
-$hue->setLight( $light, $hue->predefinedColors( 'purple' ) );
+$hue->lights()[$light]->setLight( $hue->predefinedColors( 'purple' ) );
 sleep( 1 );
-$hue->setLight( $light, $hue->predefinedColors( 'pink' ) );
+$hue->lights()[$light]->setLight( $hue->predefinedColors( 'pink' ) );
 sleep( 1 );
-$hue->setLight( $light, $hue->predefinedColors( 'yellow' ) );
+$hue->lights()[$light]->setLight( $hue->predefinedColors( 'yellow' ) );
 sleep( 1 );
-$hue->setLight( $light, $hue->predefinedColors( 'orange' ) );
+$hue->lights()[$light]->setLight( $hue->predefinedColors( 'orange' ) );
 sleep( 1 );
-$hue->setLight( $light, $hue->predefinedColors( 'coolwhite' ) );
+$hue->lights()[$light]->setLight( $hue->predefinedColors( 'coolwhite' ) );
 sleep( 1 );
-$hue->setLight( $light, $hue->predefinedColors( 'warmwhite' ) );
+$hue->lights()[$light]->setLight( $hue->predefinedColors( 'warmwhite' ) );
 sleep( 1 );
 
 ?>

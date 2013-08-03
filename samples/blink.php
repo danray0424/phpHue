@@ -8,8 +8,8 @@ $key = "replace_this_with_the_real_key";
 $hue = new Hue( $bridge, $key );
 $light = 1;
 
-$hue->alertLight( $light, "lselect" );
+$hue->lights()[$light]->setAlert( "lselect" );
 sleep( 2 );
-$hue->alertLight( $light, "none" );
+$hue->lights()[$light]->setAlert( "none" );
 
 ?>
