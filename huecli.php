@@ -61,7 +61,7 @@ if ( isset( $args['l'] ) )
 }
 else
 {
-    $light = $hue->getLightIds();
+    $light = $hue->lightIds();
 }
 
 // do we want to set ot get the bridge's state
