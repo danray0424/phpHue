@@ -1,19 +1,30 @@
 #!/usr/bin/php
 <?php
 
-require('hue.php');
+require( '../hue.php' );
 
-setLight(2, predefinedColors('green'));
-sleep(1);
-setLight(2, predefinedColors('red'));
-sleep(1);
-setLight(2, predefinedColors('blue'));
-sleep(1);
-setLight(2, predefinedColors('purple'));
-sleep(1);
-setLight(2, predefinedColors('coolwhite'));
-sleep(1);
-setLight(2, predefinedColors('warmwhite'));
-sleep(1);
+$bridge = '192.168.0.162';
+$key = "replace_this_with_the_real_key";
+$hue = new Hue( $bridge, $key );
+$light = 1;
+
+$hue->lights()[$light]->setLight( $hue->predefinedColors( 'green' ) );
+sleep( 1 );
+$hue->lights()[$light]->setLight( $hue->predefinedColors( 'red' ) );
+sleep( 1 );
+$hue->lights()[$light]->setLight( $hue->predefinedColors( 'blue' ) );
+sleep( 1 );
+$hue->lights()[$light]->setLight( $hue->predefinedColors( 'purple' ) );
+sleep( 1 );
+$hue->lights()[$light]->setLight( $hue->predefinedColors( 'pink' ) );
+sleep( 1 );
+$hue->lights()[$light]->setLight( $hue->predefinedColors( 'yellow' ) );
+sleep( 1 );
+$hue->lights()[$light]->setLight( $hue->predefinedColors( 'orange' ) );
+sleep( 1 );
+$hue->lights()[$light]->setLight( $hue->predefinedColors( 'coolwhite' ) );
+sleep( 1 );
+$hue->lights()[$light]->setLight( $hue->predefinedColors( 'warmwhite' ) );
+sleep( 1 );
 
 ?>

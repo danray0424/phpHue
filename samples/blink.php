@@ -1,12 +1,15 @@
 #!/usr/bin/php
 <?php
 
-require('hue.php');
+require( '../hue.php' );
 
-alertLight(2, "lselect");
+$bridge = '192.168.0.162';
+$key = "replace_this_with_the_real_key";
+$hue = new Hue( $bridge, $key );
+$light = 1;
 
-sleep(2);
-
-alertLight(2, "none");
+$hue->lights()[$light]->setAlert( "lselect" );
+sleep( 2 );
+$hue->lights()[$light]->setAlert( "none" );
 
 ?>
