@@ -89,6 +89,8 @@ if ( isset( $args['f'] ) )
 $lights = array();
 if ( !isset( $args['l'] ) )
     $lights = $hue->lightIds();
+elseif ( is_array($args['l'] ) )
+    $lights = $args['l'];
 else
     $lights[] = $args['l'];
 
