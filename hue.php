@@ -29,22 +29,52 @@ class Light
         if ( isset( $data["state"] ) )
         {
             $this->id = $lightid;
-            $this->name = $data["name"];
-            $this->type = $data["type"];
-            $this->modelid = $data["modelid"];
-            $this->swversion = $data["swversion"];
-            $this->state = $data["state"]["on"];
-            $this->reachable = $data["state"]["reachable"];
-            $this->bri = $data["state"]["bri"];
-            $this->hue = $data["state"]["hue"];
-            $this->sat = $data["state"]["sat"];
-            $this->ct = $data["state"]["ct"];
-            $this->alert = $data["state"]["alert"];
-            $this->effect = $data["state"]["effect"];
-            $this->colormode = $data["state"]["colormode"];
+
+            $this->setValueForMemberFromArray($this->name, $data, 'name');
+            $this->setValueForMemberFromArray($this->type, $data, 'type');
+            $this->setValueForMemberFromArray($this->modelid, $data,
+                'modelid');
+            $this->setValueForMemberFromArray($this->swversion, $data,
+                'swversion');
+            $this->setValueForMemberFromArray($this->state, $data, 'on');
+            $this->setValueForMemberFromArray($this->reachable, $data,
+                'reachable');
+            $this->setValueForMemberFromArray($this->bri, $data, 'bri');
+            # Field $data['state']['hue'] does not exist. Remove this?
+            $this->setValueForMemberFromArray($this->hue, $data, 'hue');
+            $this->setValueForMemberFromArray($this->sat, $data, 'sat');
+            $this->setValueForMemberFromArray($this->ct, $data, 'ct');
+            $this->setValueForMemberFromArray($this->alert, $data, 'alert');
+            $this->setValueForMemberFromArray($this->effect, $data, 'effect');
+            $this->setValueForMemberFromArray($this->colormode, $data,
+                'colormode');
         }
     }
 
+    /**
+     * This function searches the value of a key from an array.
+     * If no value is found on the first try the subarray 'state' is searched
+     * if present.
+     *
+     * @param $member ref The member function to be set when a value is found
+     * @param $array array The array to be searched
+     * @param $key string The key which should be searched in the array
+     * @return bool true if value was found, false if not
+     **/
+    private function setValueForMemberFromArray(&$member, &$array, $key) {
+        if ( array_key_exists($key, $array) ) {
+            $member = $array[$key];
+        }
+        else if ( array_key_exists('state', $array) &&
+            array_key_exists($key, $array['state']) ) {
+            $member = $array['state'][$key];
+        }
+        else {
+            return false;
+        }
+
+        return true;
+    }
 
     public function id()
     {
