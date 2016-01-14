@@ -45,6 +45,30 @@ class Light
         }
     }
 
+    /**
+     * This function searches the value of a key from an array.
+     * If no value is found on the first try the subarray 'state' is searched
+     * if present.
+     *
+     * @param $member ref The member function to be set when a value is found
+     * @param $array array The array to be searched
+     * @param $key string The key which should be searched in the array
+     * @return bool true if value was found, false if not
+     **/
+    private function setValueForMemberFromArray(&$member, &$array, $key) {
+        if ( array_key_exists($key, $array) ) {
+            $member = $array[$key];
+        }
+        else if ( array_key_exists('state', $array) &&
+            array_key_exists($key, $array['state']) ) {
+            $member = $array['state'][$key];
+        }
+        else {
+            return false;
+        }
+
+        return true;
+    }
 
     public function id()
     {
