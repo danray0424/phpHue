@@ -1,6 +1,6 @@
 <?php
 
-require( 'pest-master/PestJSON.php' );
+require( __DIR__ . '/pest-master/PestJSON.php' );
 
 class Light
 {
